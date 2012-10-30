@@ -1,12 +1,22 @@
 #!/usr/bin/env coffee
 require 'penny'
 
-e = 100.EUR.add 11.50.EUR
-console.log "euro add: #{e}"
+balance = 100.USD
 
-d = 100.USD.sub 50.USD
-console.log "dollar sub: #{d}"
+balance = balance.add 50.USD
+console.log "balance: #{balance}"
 
-f = e.add d
-console.log "euro dollar add: #{f}"
+balance = balance.sub 50.USD
+console.log "balance: #{balance}"
 
+balance = balance.set 80.USD
+console.log "balance: #{balance}"
+
+balance = balance.set 81.USD
+console.log "balance: #{balance}"
+
+balance = balance.set 79.USD
+console.log "balance: #{balance}"
+
+balance = balance.set (-10).USD
+console.log "balance: #{balance}"

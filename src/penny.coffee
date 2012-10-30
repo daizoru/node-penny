@@ -1,5 +1,7 @@
 #!/usr/bin/env coffee
+{inspect} = require 'util'
 #fx = require 'money'
+require 'colors'
 
 currencies = {}
 
@@ -15,10 +17,27 @@ currencies.EUR = EUR =
   symbol: '€'
   prefix: no
 
+
 class Amount
 
-  constructor: (@value, @currency=USD) ->
-  
+  constructor: (@value, @currency, @oldValue=@value) ->
+    if @value > @oldValue
+      if @value > 0
+        @color = 'green'
+      else if @value < 0
+        @color = 'yellow'
+      else
+        @color = 'white'
+    else if @value < @oldValue
+      if @value > 0
+        @color = 'yellow'
+      else if @value < 0
+        @color = 'red'
+      else
+        @color = 'red'
+    else
+      @color = 'white'
+
   to: (currency) =>
     unless currency of currencies
       throw "unknow #{currency}"
@@ -28,21 +47,13 @@ class Amount
       0#fx(@value).from(@currency.code).to(currency.code)
       throw "automatic currency conversion is not implemented yet"
  
-  add: (amount) =>
-    @value = @value + amount.to(@currency.code)
-    @
-  substract: (amount) =>
-    @value = @value - amount.to(@currency.code)
-    @
-  sub: (amount) =>
-    @substract amount
-  multiply: (amount) =>
-    @value = @value * amount.to(@currency.code)
-    @
-  mul: (amount) =>
-    @multiply amount
-  mult: (amount) =>
-    @multiply amount
+  add:       (amount) => new Amount @value + amount.to(@currency.code), @currency, @value
+  substract: (amount) => new Amount @value - amount.to(@currency.code), @currency, @value
+  multiply:  (amount) => new Amount @value * amount.to(@currency.code), @currency, @value
+  set:       (amount) => new Amount          amount.to(@currency.code), @currency, @value
+  sub:       (amount) => @substract amount
+  mul:       (amount) => @multiply amount
+  mult:      (amount) => @multiply amount
 
   sameCurrency: (other) =>
     @currency.code is other.code
@@ -52,23 +63,37 @@ class Amount
   isZero    : => @value is 0
 
   toString  : =>
-    if @currency.prefix
-      "#{@currency.symbol}#{@value}"
-    else
-      "#{@value}#{@currency.symbol}"
+    sign = do =>
+      if @value is @oldValue
+        if @value > 0 then '+' else (if @value < 0 then '-' else ' ')
+      else
+        if @value > @oldValue then '+' else (if @value < @oldValue then '-' else ' ')
+    
+    str = do =>
+      if @currency.prefix
+        "#{sign}#{@currency.symbol}#{Math.abs @value}"
+      else
+        "#{sign}#{Math.abs @value}#{@currency.symbol}"
+
+    switch @color
+      when 'green'  then str.green
+      when 'red'    then str.red
+      when 'yellow' then str.yellow
+      else
+        str
 
 for currencyName, currency of currencies
-  #console.log "registering currency #{currencyName}"
-  Object.defineProperty Number.prototype, currencyName.toUpperCase(),
-    enumerable: no
-    configurable: no
-    get: -> 
-      new Amount 0+this, currency
+  do (currencyName, currency) ->
+    Object.defineProperty Number.prototype, currencyName.toUpperCase(),
+      enumerable: no
+      configurable: no
+      get: -> 
+        new Amount (0+this), currency
 
-  Object.defineProperty Number.prototype, currencyName.toLowerCase(),
-    enumerable: no
-    configurable: no
-    get: -> 
-      new Amount 0+this, currency
+    Object.defineProperty Number.prototype, currencyName.toLowerCase(),
+      enumerable: no
+      configurable: no
+      get: -> 
+        new Amount (0+this), currency
    
      

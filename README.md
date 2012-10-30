@@ -1,31 +1,19 @@
-node-timmy
+node-penny
 ==========
 
-Timmy add a few helper properties to generate milliseconds from numbers.
-Be careful when using this, this can lead to hard to debug bugs and side
-effect. That said, I'm using it with no problem. Surprisingly,
-it even made my life easier!
+Penny add a few helper properties to generate currency from numbers.
 
+See /examples to see how it works. 
 
-```JavaScript
-require('timmy');
+Spoiler:
 
-function f () { console.log("hello"); };
+```CoffeeScript
+require 'penny'
 
-setTimeout(f, 10.ms);
+e = 100.EUR.add 11.50.EUR
+console.log "#{e}"
 
-setTimeout(f, 2.sec);
-setTimeout(f, 1.second);
-setTimeout(f, 10.seconds);
-
-setTimeout(f, 1.minute);
-setTimeout(f, 15.minutes);
-setTimeout(f, 5.min);
-
-setTimeout(f, 1.hour);
-setTimeout(f, 2.hours);
-
-setTimeout(f, 1.day);
-setTimeout(f, 7.days);
+d = 100.USD.sub 50.USD
+console.log #{d}"
 ```
 

@@ -8,10 +8,16 @@
     "watch"     : "node_modules/coffee-script/bin/coffee --watch --compile --output lib/ src/"
   },
   "main" : "./lib/penny",
+  "repository": "http://github.com/daizoru/node-penny.git",
+  "keywords": [
+    "currency",
+    "money"
+  ],
+  "license": "BSD",
   "dependencies": {
-    "money" : "0.1.x"
+    "colors" : "0.6.0-1"
   },
   "devDependencies": {
-     "coffee-script" : ">= 1.4.0"
+     "coffee-script" : "*"
   }
 }

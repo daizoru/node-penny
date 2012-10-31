@@ -1,7 +1,7 @@
 {
   "name": "penny",
   "description": "helper properties to generate currency from numbers",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Julian Bilcke <julian.bilcke@daizoru.com>",
   "scripts"     : {
     "build"     : "node_modules/coffee-script/bin/coffee --compile --output lib/ src/",

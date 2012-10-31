@@ -83,7 +83,6 @@ class Amount
       when 'yellow' then str.yellow
       else
         str
-  valueOf: -> @value
 
 for currencyName, currency of currencies
   do (currencyName, currency) ->

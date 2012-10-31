@@ -18,6 +18,8 @@ currencies.EUR = EUR =
   prefix: no
 
 
+operands = []
+
 class Amount
 
   constructor: (@value, @currency, @oldValue=@value) ->
@@ -81,6 +83,7 @@ class Amount
       when 'yellow' then str.yellow
       else
         str
+  valueOf: -> @value
 
 for currencyName, currency of currencies
   do (currencyName, currency) ->
@@ -96,4 +99,18 @@ for currencyName, currency of currencies
       get: -> 
         new Amount (0+this), currency
    
-     
+Object.defineProperty Number.prototype, 'B',
+  enumerable: no
+  configurable: no
+  get: -> (0+this) * 1000000000
+
+Object.defineProperty Number.prototype, 'M',
+  enumerable: no
+  configurable: no
+  get: -> (0+this) * 1000000
+
+Object.defineProperty Number.prototype, 'K',
+  enumerable: no
+  configurable: no
+  get: -> (0+this) * 1000
+

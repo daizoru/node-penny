@@ -26,7 +26,9 @@ class Amount
     if @value.currency?
       @value    = @value.value
       @currency = @value.currency
-      @oldValue = @value.value
+
+    if @oldValue.currency?
+      @oldValue = @oldValue.value
 
     if @value > @oldValue
       if @value > 0
@@ -57,22 +59,22 @@ class Amount
   add:       (amount) => 
     if amount.currency?
       amount = amount.to @currency.code
-    new Amount @value + amount.to(@currency.code), @currency, @value
+    new Amount @value + amount, @currency, @value
 
   substract: (amount) => 
     if amount.currency?
       amount = amount.to @currency.code
-    new Amount @value - amount.to(@currency.code), @currency, @value
+    new Amount @value - amount, @currency, @value
 
   multiply:  (amount) => 
     if amount.currency?
       amount = amount.to @currency.code
-    new Amount @value * amount.to(@currency.code), @currency, @value
+    new Amount @value * amount, @currency, @value
 
   set:       (amount) => 
     if amount.currency?
       amount = amount.to @currency.code
-    new Amount          amount.to(@currency.code), @currency, @value
+    new Amount          amount, @currency, @value
 
   sub:       (amount) => @substract amount
   mul:       (amount) => @multiply amount

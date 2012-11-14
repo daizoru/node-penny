@@ -22,7 +22,12 @@ operands = []
 
 class Amount
 
-  constructor: (@value, @currency, @oldValue=@value) ->
+  constructor: (@value, @currency=USD, @oldValue=@value) ->
+    if @value.currency?
+      @value    = @value.value
+      @currency = @value.currency
+      @oldValue = @value.value
+
     if @value > @oldValue
       if @value > 0
         @color = 'green'
@@ -49,16 +54,35 @@ class Amount
       0#fx(@value).from(@currency.code).to(currency.code)
       throw "automatic currency conversion is not implemented yet"
  
-  add:       (amount) => new Amount @value + amount.to(@currency.code), @currency, @value
-  substract: (amount) => new Amount @value - amount.to(@currency.code), @currency, @value
-  multiply:  (amount) => new Amount @value * amount.to(@currency.code), @currency, @value
-  set:       (amount) => new Amount          amount.to(@currency.code), @currency, @value
+  add:       (amount) => 
+    if amount.currency?
+      amount = amount.to @currency.code
+    new Amount @value + amount.to(@currency.code), @currency, @value
+
+  substract: (amount) => 
+    if amount.currency?
+      amount = amount.to @currency.code
+    new Amount @value - amount.to(@currency.code), @currency, @value
+
+  multiply:  (amount) => 
+    if amount.currency?
+      amount = amount.to @currency.code
+    new Amount @value * amount.to(@currency.code), @currency, @value
+
+  set:       (amount) => 
+    if amount.currency?
+      amount = amount.to @currency.code
+    new Amount          amount.to(@currency.code), @currency, @value
+
   sub:       (amount) => @substract amount
   mul:       (amount) => @multiply amount
   mult:      (amount) => @multiply amount
 
   sameCurrency: (other) =>
-    @currency.code is other.code
+    if other.code?
+      @currency.code is other.code
+    else
+      yes
 
   isNegative: => @value <  0
   isPositive: => @value >  0
